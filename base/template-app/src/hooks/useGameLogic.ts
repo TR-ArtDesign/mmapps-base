@@ -1,26 +1,25 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { generateTargetTime } from '../utils/timingEngine';
 
 export const useGameLogic = () => {
-  const [targetTime, setTargetTime] = useState(1000);
   const [startTime, setStartTime] = useState(0);
+  const [targetTime, setTargetTime] = useState(0);
 
-  const startRound = (level: number) => {
-    const time = generateTargetTime(level);
-    setTargetTime(time);
+  const startNewRound = useCallback((level: number) => {
+    const nextTarget = generateTargetTime(level);
+    setTargetTime(nextTarget);
     setStartTime(Date.now());
-  };
+    return nextTarget;
+  }, []);
 
-  const registerTap = () => {
-    const diff = Date.now() - startTime;
+  const evaluateTap = useCallback(() => {
+    const reactionTime = Date.now() - startTime;
+    const diff = Math.abs(reactionTime - targetTime);
 
-    if (Math.abs(diff - targetTime) < 80) return "PERFECT";
-    if (Math.abs(diff - targetTime) < 150) return "GOOD";
-    return "MISS";
-  };
+    if (diff < 80) return { status: 'PERFECT', points: 3 };
+    if (diff < 150) return { status: 'GOOD', points: 1 };
+    return { status: 'MISS', points: 0 };
+  }, [startTime, targetTime]);
 
-  return {
-    startRound,
-    registerTap,
-  };
+  return { startNewRound, evaluateTap, targetTime };
 };

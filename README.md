@@ -14,3 +14,13 @@ Copy this template to create new apps:
 
 PowerShell:
 Copy-Item -Recurse template-app ../apps/new-app
+## ?? Execução e Troubleshooting
+
+### Se estiver usando Android:
+`powershell
+npx react-native run-android
+``n
+### Se der erro de dependência (ou para configurar iOS):
+`powershell
+npx pod-install
+``
