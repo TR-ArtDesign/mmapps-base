@@ -1,26 +1,28 @@
-# Template App - MMApps
+ï»¿# MMApps - Mobile Framework
 
-Base project for generating casual retention-focused mobile apps.
+Framework modular para criacao de jogos e aplicativos mobile focados em retencao e monetizacao offline-first.
 
-## Features
-- Zustand state management
-- Offline-first structure
-- Modular architecture
-- Ready for AdMob integration
+## Estrutura do Projeto
 
-## Usage
+- base/template-app: O esqueleto padrao para novos aplicativos.
+- apps/: Onde residem os aplicativos finais (ex: tap-reflex).
+- scripts/: Utilitarios de automacao.
 
-Copy this template to create new apps:
+## Como Criar um Novo App
 
-PowerShell:
-Copy-Item -Recurse template-app ../apps/new-app
-## ?? Execução e Troubleshooting
+### 1. Clonar o Template
+Copie a pasta base para o diretorio de apps:
+Copy-Item -Recurse base/template-app apps/nome-do-seu-app
 
-### Se estiver usando Android:
-`powershell
+### 2. Inicializacao Automatica (Flexivel)
+Execute o script de setup passando o nome do app e, opcionalmente, a categoria (default: games):
+node scripts/setup-app.js nome-do-seu-app [categoria]
+
+Exemplos:
+- node scripts/setup-app.js tap-reflex games
+- node scripts/setup-app.js focus-timer tools
+- node scripts/setup-app.js bible-verse spiritual
+
+## Execucao
+cd apps/nome-do-seu-app
 npx react-native run-android
-``n
-### Se der erro de dependência (ou para configurar iOS):
-`powershell
-npx pod-install
-``
