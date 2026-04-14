@@ -1,9 +1,16 @@
-# MMApps
+# Template App - MMApps
 
-Base repository for Master-Mobile applications.
+Base project for generating casual retention-focused mobile apps.
 
-## Structure
+## Features
+- Zustand state management
+- Offline-first structure
+- Modular architecture
+- Ready for AdMob integration
 
-- `/base`: Core library and reusable components.
-- `/base/template-app`: Template for creating new applications.
-- `/apps`: Individual mobile applications.
+## Usage
+
+Copy this template to create new apps:
+
+PowerShell:
+Copy-Item -Recurse template-app ../apps/new-app
