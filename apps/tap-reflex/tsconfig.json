@@ -1,0 +1,72 @@
+{
+  "compilerOptions": {
+    /* Base */
+    "target": "ESNext",
+    "module": "ESNext",
+    "jsx": "react-native",
+    /* Tipagem */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    /* Interoperabilidade */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    /* Resolução */
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    /* Performance */
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    /* Base path */
+    "baseUrl": "./",
+    /* Aliases (🔥 parte mais importante) */
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@screens/*": [
+        "src/screens/*"
+      ],
+      "@navigation/*": [
+        "src/navigation/*"
+      ],
+      "@services/*": [
+        "src/services/*"
+      ],
+      "@hooks/*": [
+        "src/hooks/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@styles/*": [
+        "src/styles/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ],
+      "@game/*": [
+        "src/game/*"
+      ]
+    },
+    /* Tipos RN */
+    "types": [
+      "react",
+      "react-native"
+    ]
+  },
+  "include": [
+    "src",
+    "App.tsx",
+    "index.js"
+  ],
+  "exclude": [
+    "node_modules",
+    "babel.config.js",
+    "metro.config.js"
+  ]
+}

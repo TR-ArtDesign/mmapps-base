@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Button } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useGameStore } from '../store/useGameStore';
+import { useGameStore } from '@game/state/useGameStore';
 import { RootStackParamList } from '../navigation/AppNavigator';
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function HomeScreen({ navigation }: Props) {
-  const startGame = useGameStore((s: any) => s.startGame);
+  const resetGame = useGameStore((s: any) => s.resetGame);
 
   return (
     <View>
@@ -17,7 +17,7 @@ export default function HomeScreen({ navigation }: Props) {
       <Button
         title="Play"
         onPress={() => {
-          startGame();
+          resetGame();
           navigation.navigate('Game');
         }}
       />

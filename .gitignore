@@ -26,3 +26,17 @@ yarn-error.log*
 .idea/
 *.swp
 *.swo
+
+# Android
+**/.gradle/
+**/build/
+**/app/build/
+**/*.iml
+
+# iOS
+**/ios/Pods/
+**/ios/DerivedData/
+**/ios/build/
+
+# Expo
+.expo/

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useGameStore } from '../store/useGameStore';
+import { useGameStore } from '@game/state/useGameStore';
 import { RootStackParamList } from '../navigation/AppNavigator';
 
 type Props = {
@@ -9,10 +9,10 @@ type Props = {
 };
 
 export default function ResultScreen({ navigation }: Props) {
-  const { score, bestScore, startGame, lastAccuracy } = useGameStore();
+  const { score, bestCombo, resetGame } = useGameStore();
 
   const handleRestart = () => {
-    startGame();
+    resetGame();
     navigation.replace("Game");
   };
 
@@ -24,8 +24,8 @@ export default function ResultScreen({ navigation }: Props) {
         <Text style={styles.scoreLabel}>SCORE</Text>
         <Text style={styles.score}>{score}</Text>
         
-        <Text style={styles.bestLabel}>BEST</Text>
-        <Text style={styles.best}>{bestScore}</Text>
+        <Text style={styles.bestLabel}>BEST COMBO</Text>
+        <Text style={styles.best}>{bestCombo}</Text>
       </View>
 
       <Text style={styles.tapToRestart}>TAP ANYWHERE TO RESTART</Text>

@@ -1,136 +1,277 @@
-# TAP REFLEX EVOLUTION — ROADMAP
+# TAP REFLEX — PRODUCT ROADMAP
 
 ## 📊 STATUS
 
-Current Sprint: 2
-Status: 🟢 COMPLETED
+Current Sprint: 3
+Status: 🟡 IN PROGRESS
 
 ---
 
-## 🧩 SPRINT 1 — CORE GAME FEEL ✅ COMPLETED
+# 🧠 PRODUCT VISION
 
-### 🎯 Sprint 1 Objective
-
-Transform basic interaction into a satisfying and responsive experience.
+Create a fast, satisfying and highly replayable reflex game driven by precision, feedback and psychological engagement loops.
 
 ---
 
-### 📌 Sprint 1 Tasks
+# 🧩 CORE GAME SYSTEMS
 
-#### 1. Visual Feedback
+The game is built on 4 core systems:
+
+1. Timing System
+2. Feedback System
+3. Scoring System
+4. Difficulty System
+
+All future features must connect to at least one of these systems.
+
+---
+
+# 🧩 SPRINT 1 — CORE GAME FEEL ✅ COMPLETED
+
+## 🎯 Objective
+
+Transform basic interaction into a responsive and satisfying core loop.
+
+---
+
+## 📦 Systems Covered
+
+* Feedback System (partial)
+* Timing System (basic)
+
+---
+
+## 📌 Tasks
+
+### Visual Feedback
 
 * Scale animation on tap
-* Color flash:
+* Color states:
 
   * PERFECT → green
   * GOOD → yellow
   * MISS → red
 
-##### Validation — Visual Feedback
-
-* Feedback <100ms
-* Clear distinction
-
----
-
-#### 2. Haptic Feedback
+### Haptic Feedback
 
 * PERFECT → strong impact
 * GOOD → light impact
 * MISS → subtle vibration
 
-##### Validation — Haptic Feedback
+### Timing Indicator
 
-* No delay
-* Matches intensity
+* Visual guide (pulse / bar / circle)
+* Perfect zone clarity
 
----
+### Instant Restart
 
-#### 3. Timing Indicator
-
-* Add visual guide (bar, pulse or circle)
-* Show "perfect zone"
-
-##### Validation — Timing Indicator
-
-* Player understands timing
-* No confusion
+* Restart under 300ms
+* No blocking transitions
 
 ---
 
-#### 4. Instant Restart
+## ✅ Completion Criteria
 
-* Restart <300ms
-* No transition delays
-
-##### Validation — Instant Restart
-
-* No blocking UI
-* Loop is immediate
+* Feedback under 100ms
+* Clear visual distinction
+* No delay in haptics
+* Game loop is immediate and fluid
 
 ---
 
-### ✅ Sprint 1 Completion Criteria
+# 🧩 SPRINT 2 — CORE GAMEPLAY EXPANSION ✅ COMPLETED
 
-* Game feels responsive
-* Feedback is clear
-* Loop is fast and fluid
+## 🎯 Objective
 
----
-
-## 🧩 SPRINT 2 — PSYCHOLOGICAL ENGAGEMENT 🟡 IN PROGRESS
-
-### 🎯 Sprint 2 Objective
-
-Create emotional engagement and reward sensation.
-
-(UNLOCKED 🔓)
+Transform interaction into actual gameplay with measurable performance.
 
 ---
 
-### 📌 Sprint 2 Tasks
+## 📦 Systems Covered
 
-* Combo system
-* Streak counter
-* Screen shake on PERFECT
-* Micro reward effects
+* Scoring System
+* Feedback System (extended)
 
 ---
 
-## 🧩 SPRINT 3 — ADDICTION LOOP
+## 📌 Tasks
 
-### 🎯 Sprint 3 Objective
+### Score System
 
-Increase replay compulsion.
+* [x] Points based on accuracy (PERFECT / GOOD / MISS)
+* [x] Real-time score display
 
-(LOCKED 🔒)
+### Combo System
 
----
+* [x] Increment combo on consecutive hits
+* [x] Reset on MISS
 
-### 📌 Sprint 3 Tasks
+### Streak Counter
 
-* Near miss feedback
-* Dynamic difficulty
-* "Almost" effect
-* Fast retry hooks
+* [x] Visual indicator of consistency
 
----
+### Enhanced Feedback
 
-## 🧩 SPRINT 4 — POLISH & MONETIZATION
-
-### 🎯 Sprint 4 Objective
-
-Prepare for scaling and monetization.
-
-(LOCKED 🔒)
+* [x] Screen shake on PERFECT
+* [x] Micro reward effects (particles, flash)
 
 ---
 
-### 📌 Sprint 4 Tasks
+## 📏 Success Metrics
 
-* Ad integration points
+* Player understands score instantly
+* Combo increases engagement time
+* Feedback reinforces performance
+
+---
+
+# 🧩 SPRINT 3 — DIFFICULTY & SKILL LOOP 🟡 IN PROGRESS
+
+## 🎯 Objective
+
+Create challenge and skill progression.
+
+---
+
+## 📦 Systems Covered
+
+* Difficulty System
+* Timing System (advanced)
+
+---
+
+## 📌 Tasks
+
+### Dynamic Difficulty
+
+* Reduce reaction window over time
+* Increase game speed progressively
+
+### Precision Windows
+
+* Define strict timing zones:
+
+  * PERFECT (tight)
+  * GOOD (medium)
+  * MISS (fail)
+
+### Near Miss System
+
+* Detect almost-perfect timing
+* Special feedback for near success
+
+---
+
+## 📏 Success Metrics
+
+* Player feels increasing challenge
+* No sudden difficulty spikes
+* High skill ceiling
+
+---
+
+# 🧩 SPRINT 4 — PSYCHOLOGICAL ENGAGEMENT 🔒 LOCKED
+
+## 🎯 Objective
+
+Increase replay compulsion and emotional retention.
+
+---
+
+## 📦 Systems Covered
+
+* Feedback System (psychological layer)
+* Scoring System (reward loop)
+
+---
+
+## 📌 Tasks
+
+### “Almost” Effect
+
+* Highlight near misses visually
+
+### Fast Retry Hooks
+
+* Immediate retry without friction
+
+### Reward Feedback Loop
+
+* Stronger feedback for streak milestones
+
+### Session Loop Optimization
+
+* Reduce downtime between attempts
+
+---
+
+## 📏 Success Metrics
+
+* Increased replay rate
+* Reduced session drop-off
+* Strong “just one more try” effect
+
+---
+
+# 🧩 SPRINT 5 — POLISH & SCALING 🔒 LOCKED
+
+## 🎯 Objective
+
+Prepare the game for production and scalability.
+
+---
+
+## 📦 Systems Covered
+
+* All systems (refinement phase)
+
+---
+
+## 📌 Tasks
+
+### UI Refinement
+
+* Clean layout
+* Visual hierarchy
+* Readability improvements
+
+### Performance Optimization
+
+* Stable FPS
+* Low input latency
+
+### Architecture Hardening
+
+* Separation of game logic (engine)
+* State management (Zustand or similar)
+
+### Monetization Hooks (Optional)
+
 * Reward retry
-* UX polish
-* Performance tuning
+* Ad entry points (non-intrusive)
+
+---
+
+## 📏 Success Metrics
+
+* Stable performance across devices
+* Clean and scalable codebase
+* Production-ready experience
+
+---
+
+# 🧭 DEVELOPMENT RULES
+
+* Every feature must belong to a Core System
+* No feature without measurable impact
+* Avoid premature complexity (menus, multiplayer, etc.)
+* Prioritize feel over features
+
+---
+
+# 🏁 CURRENT FOCUS
+
+👉 Sprint 3 — Difficulty & Skill Loop
+Focus on: Dynamic Difficulty + Precision Windows + Near Miss System
 
 ---
