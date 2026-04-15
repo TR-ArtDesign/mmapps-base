@@ -1,0 +1,10 @@
+{
+  "name": "tap-reflex",
+  "displayName": "Tap Reflex",
+  "android": {
+    "package": "com.mmapps.games.tapreflex"
+  },
+  "ios": {
+    "bundleIdentifier": "com.mmapps.games.tapreflex"
+  }
+}
