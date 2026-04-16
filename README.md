@@ -1,11 +1,11 @@
-﻿# MMApps - Mobile Framework
+# MMApps - Mobile Framework
 
 Framework modular para criacao de jogos e aplicativos mobile focados em retencao e monetizacao offline-first.
 
 ## Estrutura do Projeto
 
 - base/template-app: O esqueleto padrao para novos aplicativos.
-- apps/: Onde residem os aplicativos finais (ex: tap-reflex).
+- apps/: Onde residem os aplicativos finais (ex: aktion-tap).
 - scripts/: Utilitarios de automacao.
 
 ## Como Criar um Novo App
@@ -19,10 +19,11 @@ Execute o script de setup passando o nome do app e, opcionalmente, a categoria (
 node scripts/setup-app.js nome-do-seu-app [categoria]
 
 Exemplos:
-- node scripts/setup-app.js tap-reflex games
+- node scripts/setup-app.js aktion-tap games
 - node scripts/setup-app.js focus-timer tools
 - node scripts/setup-app.js bible-verse spiritual
 
 ## Execucao
 cd apps/nome-do-seu-app
 npx react-native run-android
+

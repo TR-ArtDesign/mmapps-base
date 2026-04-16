@@ -10,7 +10,7 @@ const appType = process.argv[3] || 'games'; // Default para 'games' se não espe
 
 if (!appName) {
   console.error('Usage: node scripts/setup-app.js <app-name> [app-type]');
-  console.error('Example: node scripts/setup-app.js tap-reflex games');
+  console.error('Example: node scripts/setup-app.js aktion-tap games');
   process.exit(1);
 }
 
@@ -83,3 +83,4 @@ try {
   console.error(`\n❌ Error during setup: ${error.message}`);
   process.exit(1);
 }
+

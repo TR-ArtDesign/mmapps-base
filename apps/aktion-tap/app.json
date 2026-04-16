@@ -1,0 +1,10 @@
+{
+  "name": "aktion-tap",
+  "displayName": "Aktion Tap",
+  "android": {
+    "package": "com.mmapps.games.aktiontap"
+  },
+  "ios": {
+    "bundleIdentifier": "com.mmapps.games.aktiontap"
+  }
+}

@@ -1,4 +1,4 @@
-# ARCHITECTURE.md — M.M.APPS BASE ARCHITECTURE (Tap Reflex Evolution)
+# ARCHITECTURE.md — M.M.APPS BASE ARCHITECTURE (Aktion Tap Evolution)
 
 ## 🧠 OVERVIEW
 
@@ -408,3 +408,4 @@ Priority order:
 ---
 
 END OF DOCUMENT
+

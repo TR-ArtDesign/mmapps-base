@@ -7,7 +7,7 @@ export default function HomeScreen({ navigation }: any) {
 
   return (
     <View>
-      <Text>Tap Reflex</Text>
+      <Text>Aktion Tap</Text>
       <Button
         title="Play"
         onPress={() => {
@@ -18,3 +18,4 @@ export default function HomeScreen({ navigation }: any) {
     </View>
   );
 }
+
