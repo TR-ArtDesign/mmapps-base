@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function ResultScreen({ navigation }: Props) {
-  const { score, bestCombo, resetGame } = useGameStore();
+  const { score, bestCombo, highScore, isNewRecord, resetGame } = useGameStore();
 
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
@@ -36,17 +36,29 @@ export default function ResultScreen({ navigation }: Props) {
 
   return (
     <Pressable style={styles.container} onPress={handleRestart}>
-      <Animated.Text style={[styles.missText, { opacity: opacityAnim, transform: [{ scale: scaleAnim }] }]}>
+      <Animated.Text style={[styles.gameOverText, { opacity: opacityAnim, transform: [{ scale: scaleAnim }] }]}>
         GAME OVER
       </Animated.Text>
       
       <Animated.View style={[styles.statsContainer, { opacity: opacityAnim, transform: [{ translateY: opacityAnim.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }) }] }]}>
+        {isNewRecord && (
+          <View style={styles.newRecordBadge}>
+            <Text style={styles.newRecordText}>NEW RECORD</Text>
+          </View>
+        )}
+        
         <Text style={styles.scoreLabel}>FINAL SCORE</Text>
         <Text style={styles.score}>{score.toLocaleString()}</Text>
         
-        <View style={styles.bestContainer}>
-          <Text style={styles.bestLabel}>BEST STREAK</Text>
-          <Text style={styles.best}>{bestCombo}</Text>
+        <View style={styles.recordsWrapper}>
+          <View style={styles.recordBox}>
+            <Text style={styles.recordLabel}>BEST SCORE</Text>
+            <Text style={styles.recordValue}>{highScore.toLocaleString()}</Text>
+          </View>
+          <View style={[styles.recordBox, { borderLeftWidth: 1, borderLeftColor: '#222' }]}>
+            <Text style={styles.recordLabel}>BEST STREAK</Text>
+            <Text style={styles.recordValue}>{bestCombo}</Text>
+          </View>
         </View>
       </Animated.View>
 
@@ -64,7 +76,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: '#000',
   },
-  missText: {
+  gameOverText: {
     fontSize: 64,
     fontWeight: '900',
     color: '#ff4d4d',
@@ -77,6 +89,21 @@ const styles = StyleSheet.create({
   statsContainer: {
     alignItems: 'center',
     marginBottom: 60,
+    width: '100%',
+  },
+  newRecordBadge: {
+    backgroundColor: '#00FFAA',
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 4,
+    marginBottom: 20,
+    transform: [{ rotate: '-3deg' }],
+  },
+  newRecordText: {
+    color: '#000',
+    fontWeight: '900',
+    fontSize: 12,
+    letterSpacing: 2,
   },
   scoreLabel: {
     color: '#666',
@@ -89,29 +116,34 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 82,
     fontWeight: '900',
-    marginBottom: 30,
+    marginBottom: 40,
     textShadowColor: 'rgba(255, 255, 255, 0.2)',
     textShadowRadius: 15,
   },
-  bestContainer: {
-    backgroundColor: '#111',
-    paddingVertical: 10,
-    paddingHorizontal: 30,
-    borderRadius: 50,
+  recordsWrapper: {
+    flexDirection: 'row',
+    backgroundColor: '#0a0a0a',
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#333',
-    alignItems: 'center',
+    borderColor: '#1a1a1a',
+    overflow: 'hidden',
   },
-  bestLabel: {
-    color: '#60a5fa',
-    fontSize: 11,
+  recordBox: {
+    paddingVertical: 15,
+    paddingHorizontal: 25,
+    alignItems: 'center',
+    minWidth: 140,
+  },
+  recordLabel: {
+    color: '#444',
+    fontSize: 10,
     fontWeight: '900',
     letterSpacing: 2,
-    marginBottom: 2,
+    marginBottom: 5,
   },
-  best: {
-    color: '#60a5fa',
-    fontSize: 28,
+  recordValue: {
+    color: '#00FFAA',
+    fontSize: 24,
     fontWeight: '900',
     fontStyle: 'italic',
   },
@@ -121,7 +153,7 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     letterSpacing: 3,
     position: 'absolute',
-    bottom: 120,
+    bottom: 20,
     opacity: 0.8,
   }
 });

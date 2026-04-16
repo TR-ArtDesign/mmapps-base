@@ -7,19 +7,22 @@ import { Accuracy } from '@game/types/game.types';
  * 3. Late Game (26+): Desafio agressivo de antecipação.
  */
 export function getDynamicTargetPoint(level: number): number {
-  const base = 0.96;   // Começa ainda mais fácil no início
-  const min = 0.82;
+  /**
+   * Calibração realista:
+   * - Não pode ficar colado em 1.0
+   * - Precisa espaço para zonas (ALMOST / GOOD)
+   */
+  const base = 0.92;   // ← CORREÇÃO PRINCIPAL (antes estava alto demais)
+  const min = 0.80;
+
   let decay = 0;
 
   if (level <= 10) {
-    // Fase 1: Crescimento quase imperceptível (0.1% por nível)
-    decay = level * 0.001;
+    decay = level * 0.0015;
   } else if (level <= 25) {
-    // Fase 2: Rampa de aprendizado
-    decay = 0.01 + (level - 10) * 0.0025;
+    decay = 0.015 + (level - 10) * 0.002;
   } else {
-    // Fase 3: Dificuldade "Endgame"
-    decay = 0.05 + (level - 25) * 0.0035;
+    decay = 0.045 + (level - 25) * 0.003;
   }
 
   return Math.max(base - decay, min);
@@ -29,29 +32,36 @@ export function getDynamicTargetPoint(level: number): number {
  * Avalia o tempo baseado no progresso normalizado e na curva dinâmica.
  */
 export function evaluateTiming(
-  progress: number, 
-  level: number
-): { accuracy: Accuracy; distance: number; targetPoint: number } {
-  const targetPoint = getDynamicTargetPoint(level);
-  const clampedProgress = Math.min(Math.max(progress, 0), 1);
-  const distance = Math.abs(clampedProgress - targetPoint);
+  progress: number,
+  targetPoint: number = 1.0
+): { accuracy: Accuracy; distance: number } {
+  const distance = Math.abs(progress - targetPoint);
 
-  // Thresholds de precisão competitiva
-  const PERFECT_THRESHOLD = 0.05;
-  const GOOD_THRESHOLD = 0.12;
-  const ALMOST_THRESHOLD = 0.22;
+  /**
+   * NOVA DISTRIBUIÇÃO REAL (EXPANDIDA)
+   * baseada no seu design:
+   *
+   * PERFECT → pequeno (preciso)
+   * GOOD → médio
+   * ALMOST → grande
+   * MISS → restante
+   */
+
+  const PERFECT_THRESHOLD = 0.12;  // 20%
+  const GOOD_THRESHOLD = 0.25;  // 30%
+  const ALMOST_THRESHOLD = 0.55;  // 40%
 
   if (distance <= PERFECT_THRESHOLD) {
-    return { accuracy: 'PERFECT', distance, targetPoint };
+    return { accuracy: 'PERFECT', distance };
   }
 
   if (distance <= GOOD_THRESHOLD) {
-    return { accuracy: 'GOOD', distance, targetPoint };
+    return { accuracy: 'GOOD', distance };
   }
 
   if (distance <= ALMOST_THRESHOLD) {
-    return { accuracy: 'ALMOST', distance, targetPoint };
+    return { accuracy: 'ALMOST', distance };
   }
 
-  return { accuracy: 'MISS', distance, targetPoint };
+  return { accuracy: 'MISS', distance };
 }

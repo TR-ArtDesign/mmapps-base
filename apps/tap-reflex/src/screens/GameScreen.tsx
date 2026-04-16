@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, Pressable, Animated, Vibration, StyleSheet, Platform } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useGameStore } from '@game/state/useGameStore';
-import { evaluateTiming } from '@game/engine/timingEngine';
+import { evaluateTiming, getDynamicTargetPoint } from '@game/engine/timingEngine';
 import { Accuracy } from '@game/types/game.types';
 import { getDifficultyParams } from '@game/engine/difficultyEngine';
 import { RootStackParamList } from '../navigation/AppNavigator';
@@ -181,11 +181,12 @@ export default function GameScreen({ navigation }: Props) {
     const progress = Math.min(Math.max(elapsed / state.roundDuration, 0), 1);
 
     // STEP 4 & 5: Cálculo do Hit Dinâmico
-    const result = evaluateTiming(progress, state.derivedLevel);
+    const targetPoint = getDynamicTargetPoint(state.derivedLevel);
+    const result = evaluateTiming(progress, targetPoint);
     
     // DEBUG VALIDATION
     setDebugInfo({ progress, distance: result.distance, accuracy: result.accuracy });
-    console.log(`[DYNAMIC] Progress: ${progress.toFixed(3)} | Target: ${result.targetPoint.toFixed(3)} | Dist: ${result.distance.toFixed(3)} | Res: ${result.accuracy}`);
+    console.log(`[DYNAMIC] Progress: ${progress.toFixed(3)} | Target: ${targetPoint.toFixed(3)} | Dist: ${result.distance.toFixed(3)} | Res: ${result.accuracy}`);
     
     registerHit(result);
     setBtnColor(getColorByAccuracy(result.accuracy));
@@ -253,118 +254,119 @@ export default function GameScreen({ navigation }: Props) {
   });
 
   return (
-    <Animated.View style={[styles.container, { transform: [{ translateX: shakeAnim }] }]}>
+    <Pressable style={styles.rootPressable} onPress={handleTap}>
       <Animated.View 
         style={[
-          styles.bgFlash, 
-          { 
-            backgroundColor: getColorByAccuracy(lastAccuracy),
-            opacity: bgFlashOpacity 
-          }
-        ]} 
-      />
-
-      <View style={styles.header}>
-        <View style={styles.scoreData}>
-          <Text style={styles.scoreLabel}>SCORE - LV.{paddedLevel}</Text>
-          <Text style={styles.scoreText}>{score}</Text>
-          <View style={styles.progressBarBg}>
-            <View style={[styles.progressBarFill, { width: derivedProgress * 120 }]}/>
-          </View>
-        </View>
+          styles.container, 
+          { transform: [{ translateX: shakeAnim }] }
+        ]}
+        pointerEvents="box-none"
+      >
+        <Animated.View 
+          style={[
+            styles.bgFlash, 
+            { 
+              backgroundColor: getColorByAccuracy(lastAccuracy),
+              opacity: bgFlashOpacity 
+            }
+          ]} 
+        />
 
         {__DEV__ && (
           <View style={styles.debugPanel}>
-            <Text style={styles.debugText}>PROG: {debugInfo.progress.toFixed(2)}</Text>
-            <Text style={styles.debugText}>DIST: {debugInfo.distance.toFixed(2)}</Text>
-            <Text style={styles.debugTextSub}>RES: {debugInfo.accuracy}</Text>
+            <Text style={styles.debugText}>
+              P: {debugInfo.progress.toFixed(2)} | D: {debugInfo.distance.toFixed(2)} | {debugInfo.accuracy}
+            </Text>
           </View>
         )}
-      </View>
 
-      {combo > 1 && (
-        <Animated.View style={[styles.comboContainer, { transform: [{ scale: comboAnim }] }]}>
-          <Text style={styles.comboText}>{combo}</Text>
-          <Text style={styles.comboLabel}>COMBO</Text>
-        </Animated.View>
-      )}
-
-      <View style={styles.gameArea}>
-        <View style={styles.targetContainer} pointerEvents="none">
-          <View style={[styles.targetZone, styles.zoneMiss]} />
-          <View style={[styles.targetZone, styles.zoneAlmost]} />
-          <View style={[styles.targetZone, styles.zoneGood]} />
-          <View style={[styles.targetZone, styles.zonePerfect]} />
-
-          <Animated.View 
-            style={[
-              styles.indicator, 
-              { 
-                transform: [{ scale: indicatorScale }],
-                borderColor: getColorByAccuracy(lastAccuracy),
-                opacity: pulseAnim.interpolate({ inputRange: [0, 0.2, 1], outputRange: [0, 1, 1] })
-              }
-            ]} 
-          />
-
-          <Animated.View
-            style={{
-              position: 'absolute',
-              width: 160,
-              height: 160,
-              borderRadius: 80,
-              backgroundColor: '#00FFAA',
-              opacity: glowAnim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, 0.8, 0] }),
-              transform: [{ scale: glowAnim.interpolate({ inputRange: [0, 1], outputRange: [0.5, 2.5] }) }],
-            }}
-          />
-
-          {particles.map((p, i) => (
-            <Animated.View
-              key={i}
-              style={{
-                position: 'absolute',
-                width: 6,
-                height: 6,
-                borderRadius: 3,
-                backgroundColor: '#00FFAA',
-                opacity: p.opacity,
-                transform: [
-                  { translateX: p.pos.x },
-                  { translateY: p.pos.y },
-                  { scale: p.scale }
-                ],
-              }}
-            />
-          ))}
-
-          <Animated.View 
-            style={[
-              styles.splashRing, 
-              { 
-                transform: [{ scale: splashScale }], 
-                borderColor: btnColor === 'transparent' ? '#fff' : btnColor,
-                opacity: splashOpacity 
-              }
-            ]} 
-          />
+        <View style={styles.header} pointerEvents="none">
+          <View style={styles.scoreData}>
+            <Text style={styles.scoreLabel}>SCORE - LV.{paddedLevel}</Text>
+            <Text style={styles.scoreText}>{score}</Text>
+            <View style={styles.progressBarBg}>
+              <View style={[styles.progressBarFill, { width: derivedProgress * 120 }]}/>
+            </View>
+          </View>
         </View>
 
-        <Pressable 
-          onPress={handleTap} 
-          style={[StyleSheet.absoluteFill, { zIndex: 999, justifyContent: 'center', alignItems: 'center' }]}
-        >
-          <View style={{ width: 1, height: 1 }} />
-        </Pressable>
-      </View>
+        {combo > 1 && (
+          <Animated.View style={[styles.comboContainer, { transform: [{ scale: comboAnim }] }]} pointerEvents="none">
+            <Text style={styles.comboText}>{combo}</Text>
+            <Text style={styles.comboLabel}>COMBO</Text>
+          </Animated.View>
+        )}
 
-      <FloatingFeedback 
-        text={feedbackText} 
-        opacity={feedbackOpacity} 
-        scale={feedbackScale}
-        color={getColorByAccuracy(lastAccuracy)}
-      />
-    </Animated.View>
+        <View style={styles.gameArea} pointerEvents="none">
+          <View style={styles.targetContainer}>
+            <View style={[styles.targetZone, styles.zoneMiss]} />
+            <View style={[styles.targetZone, styles.zoneAlmost]} />
+            <View style={[styles.targetZone, styles.zoneGood]} />
+            <View style={[styles.targetZone, styles.zonePerfect]} />
+
+            <Animated.View 
+              style={[
+                styles.indicator, 
+                { 
+                  transform: [{ scale: indicatorScale }],
+                  borderColor: getColorByAccuracy(lastAccuracy),
+                  opacity: pulseAnim.interpolate({ inputRange: [0, 0.2, 1], outputRange: [0, 1, 1] })
+                }
+              ]} 
+            />
+
+            <Animated.View
+              style={{
+                position: 'absolute',
+                width: 160,
+                height: 160,
+                borderRadius: 80,
+                backgroundColor: '#00FFAA',
+                opacity: glowAnim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, 0.8, 0] }),
+                transform: [{ scale: glowAnim.interpolate({ inputRange: [0, 1], outputRange: [0.5, 2.5] }) }],
+              }}
+            />
+
+            {particles.map((p, i) => (
+              <Animated.View
+                key={i}
+                style={{
+                  position: 'absolute',
+                  width: 6,
+                  height: 6,
+                  borderRadius: 3,
+                  backgroundColor: '#00FFAA',
+                  opacity: p.opacity,
+                  transform: [
+                    { translateX: p.pos.x },
+                    { translateY: p.pos.y },
+                    { scale: p.scale }
+                  ],
+                }}
+              />
+            ))}
+
+            <Animated.View 
+              style={[
+                styles.splashRing, 
+                { 
+                  transform: [{ scale: splashScale }], 
+                  borderColor: btnColor === 'transparent' ? '#fff' : btnColor,
+                  opacity: splashOpacity 
+                }
+              ]} 
+            />
+          </View>
+        </View>
+
+        <FloatingFeedback 
+          text={feedbackText} 
+          opacity={feedbackOpacity} 
+          scale={feedbackScale}
+          color={getColorByAccuracy(lastAccuracy)}
+        />
+      </Animated.View>
+    </Pressable>
   );
 }
 
@@ -388,7 +390,8 @@ const FloatingFeedback = ({ text, opacity, scale, color }: any) => (
 );
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: '#000' },
+  rootPressable: { flex: 1, backgroundColor: '#000' },
+  container: { flex: 1, justifyContent: "center", alignItems: "center" },
   bgFlash: { ...StyleSheet.absoluteFillObject },
   header: { position: 'absolute', top: 60, left: 30, right: 30, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   scoreData: { alignItems: 'flex-start' },
@@ -397,13 +400,12 @@ const styles = StyleSheet.create({
   progressBarBg: { height: 4, width: 140, backgroundColor: '#222', marginTop: 8, borderRadius: 2, overflow: 'hidden' },
   progressBarFill: { height: '100%', backgroundColor: '#00FFAA', shadowColor: '#00FFAA', shadowRadius: 10, shadowOpacity: 0.5 },
   
-  debugPanel: { backgroundColor: 'rgba(0,0,0,0.8)', padding: 5, borderRadius: 5, borderWidth: 1, borderColor: '#333' },
-  debugText: { color: '#00FFAA', fontSize: 10, fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace' },
-  debugTextSub: { color: '#fff', fontSize: 10, fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace' },
+  debugPanel: { position: 'absolute', top: 0, left: 0, right: 0, backgroundColor: 'rgba(0,0,0,0.3)', padding: 2, alignItems: 'center' },
+  debugText: { color: '#00FFAA', fontSize: 9, fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace', opacity: 0.5 },
 
-  comboContainer: { position: 'absolute', top: 140, alignItems: 'center' },
-  comboText: { fontSize: 64, fontWeight: '900', color: '#60a5fa', fontStyle: 'italic', textShadowColor: 'rgba(96, 165, 250, 0.5)', textShadowRadius: 15 },
-  comboLabel: { fontSize: 18, fontWeight: '900', color: '#60a5fa', letterSpacing: 4, marginTop: -10 },
+  comboContainer: { position: 'absolute', top: 60, right: 30, alignItems: 'flex-end' },
+  comboText: { fontSize: 42, fontWeight: '900', color: '#60a5fa', fontStyle: 'italic', textShadowColor: 'rgba(96, 165, 250, 0.5)', textShadowRadius: 15 },
+  comboLabel: { fontSize: 10, fontWeight: '900', color: '#60a5fa', letterSpacing: 2, marginTop: -5 },
   
   gameArea: { width: 350, height: 350, justifyContent: 'center', alignItems: 'center' },
   targetContainer: { width: TARGET_SIZE, height: TARGET_SIZE, justifyContent: 'center', alignItems: 'center' },

@@ -1,277 +1,187 @@
-# TAP REFLEX — PRODUCT ROADMAP
-
-## 📊 STATUS
-
-Current Sprint: 3
-Status: 🟡 IN PROGRESS
+# TAP REFLEX — PRODUCT ROADMAP (EXECUTION SYSTEM)
 
 ---
 
-# 🧠 PRODUCT VISION
+## 📊 GLOBAL STATUS
 
-Create a fast, satisfying and highly replayable reflex game driven by precision, feedback and psychological engagement loops.
-
----
-
-# 🧩 CORE GAME SYSTEMS
-
-The game is built on 4 core systems:
-
-1. Timing System
-2. Feedback System
-3. Scoring System
-4. Difficulty System
-
-All future features must connect to at least one of these systems.
+Current Phase: RETENTION → POLISHING
+Current Sprint: 5
+Status: 🟡 PLANNING
 
 ---
 
-# 🧩 SPRINT 1 — CORE GAME FEEL ✅ COMPLETED
+## 🧠 EXECUTION RULES (MANDATORY)
 
-## 🎯 Objective
+### 🔒 Sprint Lock Rule
 
-Transform basic interaction into a responsive and satisfying core loop.
-
----
-
-## 📦 Systems Covered
-
-* Feedback System (partial)
-* Timing System (basic)
+* Only the USER can LOCK a sprint
+* AI marks as "AWAITING VALIDATION" after implementation
+* Once LOCKED, only critical bug fixes are allowed
 
 ---
 
-## 📌 Tasks
+### 🧩 Task Classification Rule
 
-### Visual Feedback
+Every new idea MUST be classified:
 
-* Scale animation on tap
-* Color states:
+1. Does it break the game?
+   → YES: Fix immediately
+   → NO: continue
 
-  * PERFECT → green
-  * GOOD → yellow
-  * MISS → red
+2. Does it increase retention?
+   → YES: Add to PRIORITY BACKLOG
+   → NO: Add to GENERAL BACKLOG
 
-### Haptic Feedback
-
-* PERFECT → strong impact
-* GOOD → light impact
-* MISS → subtle vibration
-
-### Timing Indicator
-
-* Visual guide (pulse / bar / circle)
-* Perfect zone clarity
-
-### Instant Restart
-
-* Restart under 300ms
-* No blocking transitions
+3. Is it blocking current sprint?
+   → YES: Execute now
+   → NO: Move forward (DO NOT INTERRUPT FLOW)
 
 ---
 
-## ✅ Completion Criteria
+### 🚫 Anti-Loop Rule
 
-* Feedback under 100ms
-* Clear visual distinction
-* No delay in haptics
-* Game loop is immediate and fluid
-
----
-
-# 🧩 SPRINT 2 — CORE GAMEPLAY EXPANSION ✅ COMPLETED
-
-## 🎯 Objective
-
-Transform interaction into actual gameplay with measurable performance.
+* Never return to previous sprint for "improvements"
+* Never interrupt current sprint for non-blocking ideas
+* Good ideas ≠ Immediate execution
 
 ---
 
-## 📦 Systems Covered
+## 🧩 SPRINT 1 — CORE GAME FEEL ✅ LOCKED
 
-* Scoring System
-* Feedback System (extended)
+### Objective:
 
----
+Establish responsive and satisfying interaction.
 
-## 📌 Tasks
+### Delivered:
 
-### Score System
-
-* [x] Points based on accuracy (PERFECT / GOOD / MISS)
-* [x] Real-time score display
-
-### Combo System
-
-* [x] Increment combo on consecutive hits
-* [x] Reset on MISS
-
-### Streak Counter
-
-* [x] Visual indicator of consistency
-
-### Enhanced Feedback
-
-* [x] Screen shake on PERFECT
-* [x] Micro reward effects (particles, flash)
+* Tap feedback (visual)
+* Timing indicator
+* Instant restart loop
+* Base responsiveness
 
 ---
 
-## 📏 Success Metrics
+## 🧩 SPRINT 2 — PSYCHOLOGICAL ENGAGEMENT ✅ LOCKED
 
-* Player understands score instantly
-* Combo increases engagement time
-* Feedback reinforces performance
+### Objective:
 
----
+Create emotional engagement.
 
-# 🧩 SPRINT 3 — DIFFICULTY & SKILL LOOP 🟡 IN PROGRESS
+### Delivered:
 
-## 🎯 Objective
-
-Create challenge and skill progression.
-
----
-
-## 📦 Systems Covered
-
-* Difficulty System
-* Timing System (advanced)
+* Score system
+* Combo system
+* Feedback layers (PERFECT / GOOD / ALMOST / MISS)
+* Visual response improvements
 
 ---
 
-## 📌 Tasks
+## 🧩 SPRINT 3 — ADDICTION LOOP ✅ LOCKED
 
-### Dynamic Difficulty
+### Objective:
 
-* Reduce reaction window over time
-* Increase game speed progressively
+Increase replay compulsion.
 
-### Precision Windows
+### Delivered:
 
-* Define strict timing zones:
-
-  * PERFECT (tight)
-  * GOOD (medium)
-  * MISS (fail)
-
-### Near Miss System
-
-* Detect almost-perfect timing
-* Special feedback for near success
+* Dynamic difficulty
+* Timing calibration
+* TargetPoint dynamic system
+* Progressive challenge
 
 ---
 
-## 📏 Success Metrics
+## 🧩 SPRINT 4 — RETENTION CORE ✅ LOCKED
 
-* Player feels increasing challenge
-* No sudden difficulty spikes
-* High skill ceiling
+### Objective:
 
----
+Create reason to replay.
 
-# 🧩 SPRINT 4 — PSYCHOLOGICAL ENGAGEMENT 🔒 LOCKED
+### Tasks:
 
-## 🎯 Objective
+* Local High Score persistence ✅
+* Best score display (Home + Result) ✅
+* "New Record" feedback ✅
 
-Increase replay compulsion and emotional retention.
+### Validation:
 
----
-
-## 📦 Systems Covered
-
-* Feedback System (psychological layer)
-* Scoring System (reward loop)
+* Score persists after app restart
+* Player is motivated to retry
+* Record comparison is clear
 
 ---
 
-## 📌 Tasks
+## 🧩 SPRINT 5 — FEEDBACK ENHANCEMENT 🔜 NEXT
 
-### “Almost” Effect
+### Objective:
 
-* Highlight near misses visually
+Strengthen sensory feedback.
 
-### Fast Retry Hooks
+### Tasks:
 
-* Immediate retry without friction
-
-### Reward Feedback Loop
-
-* Stronger feedback for streak milestones
-
-### Session Loop Optimization
-
-* Reduce downtime between attempts
+* Refined Haptics (per accuracy)
+* Level Up impact feedback
+* Stronger PERFECT reward
 
 ---
 
-## 📏 Success Metrics
+## 🧩 SPRINT 6 — VISUAL IDENTITY 🔒 LOCKED (FUTURE)
 
-* Increased replay rate
-* Reduced session drop-off
-* Strong “just one more try” effect
+### Objective:
 
----
+Establish brand identity.
 
-# 🧩 SPRINT 5 — POLISH & SCALING 🔒 LOCKED
+### Tasks:
 
-## 🎯 Objective
-
-Prepare the game for production and scalability.
-
----
-
-## 📦 Systems Covered
-
-* All systems (refinement phase)
+* Color system refinement
+* Typography style
+* App icon
+* Splash screen
 
 ---
 
-## 📌 Tasks
+## 🧠 PRIORITY BACKLOG (RETENTION DRIVERS)
 
-### UI Refinement
+⚠️ Only execute AFTER current sprint
 
-* Clean layout
-* Visual hierarchy
-* Readability improvements
-
-### Performance Optimization
-
-* Stable FPS
-* Low input latency
-
-### Architecture Hardening
-
-* Separation of game logic (engine)
-* State management (Zustand or similar)
-
-### Monetization Hooks (Optional)
-
-* Reward retry
-* Ad entry points (non-intrusive)
+* Near Miss System (psychological retention boost)
+* Advanced Haptic Patterns
+* Adaptive Feedback based on player performance
 
 ---
 
-## 📏 Success Metrics
+## ⚫ GENERAL BACKLOG (NON-CRITICAL)
 
-* Stable performance across devices
-* Clean and scalable codebase
-* Production-ready experience
-
----
-
-# 🧭 DEVELOPMENT RULES
-
-* Every feature must belong to a Core System
-* No feature without measurable impact
-* Avoid premature complexity (menus, multiplayer, etc.)
-* Prioritize feel over features
+* Themes / Skins
+* Sound system
+* Online leaderboard
+* Settings screen
 
 ---
 
-# 🏁 CURRENT FOCUS
+## 🛡️ PRODUCT STATE GUARANTEE
 
-👉 Sprint 3 — Difficulty & Skill Loop
-Focus on: Dynamic Difficulty + Precision Windows + Near Miss System
+At any moment:
+
+* Gameplay must remain stable
+* Timing must remain untouched
+* Performance must remain smooth
+
+If any feature risks these:
+→ REJECT or POSTPONE
 
 ---
+
+## 🚀 EXECUTION FLOW
+
+1. AI: Complete current sprint tasks
+2. AI: Mark sprint as "AWAITING VALIDATION"
+3. USER: Validate and LOCK sprint
+4. Move forward
+5. NEVER GO BACK
+
+---
+
+## 🔥 CORE PRINCIPLE
+
+"Done and progressing beats perfect and stuck"

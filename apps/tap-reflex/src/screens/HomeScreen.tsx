@@ -10,7 +10,7 @@ type Props = {
 
 export default function HomeScreen({ navigation }: Props) {
   const resetGame = useGameStore((s) => s.resetGame);
-  const bestCombo = useGameStore((s) => s.bestCombo);
+  const highScore = useGameStore((s) => s.highScore);
 
   const titleAnim = useRef(new Animated.Value(0)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
@@ -70,8 +70,8 @@ export default function HomeScreen({ navigation }: Props) {
           <Text style={styles.startText}>START MISSION</Text>
         </Pressable>
 
-        {bestCombo > 0 && (
-          <Text style={styles.bestCombo}>BEST STREAK: {bestCombo}</Text>
+        {highScore > 0 && (
+          <Text style={styles.bestScore}>PERSONAL BEST: {highScore.toLocaleString()}</Text>
         )}
       </View>
     </View>
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     letterSpacing: 3,
   },
-  bestCombo: {
+  bestScore: {
     marginTop: 20,
     color: '#444',
     fontSize: 11,
