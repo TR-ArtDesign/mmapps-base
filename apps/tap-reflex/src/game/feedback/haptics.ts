@@ -13,7 +13,7 @@ export function triggerHaptic(accuracy: Accuracy) {
   try {
     switch (accuracy) {
       case 'PERFECT':
-        ReactNativeHapticFeedback.trigger("impactHeavy", options);
+        ReactNativeHapticFeedback.trigger("notificationSuccess", options);
         break;
       case 'GOOD':
         ReactNativeHapticFeedback.trigger("impactMedium", options);

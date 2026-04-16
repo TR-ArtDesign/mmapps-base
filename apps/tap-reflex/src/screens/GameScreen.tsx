@@ -7,6 +7,7 @@ import { Accuracy } from '@game/types/game.types';
 import { getDifficultyParams } from '@game/engine/difficultyEngine';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { triggerHaptic } from '@game/feedback/haptics';
+import { triggerPerfectFeedback } from '@game/services/feedbackService';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Game'>;
@@ -28,6 +29,11 @@ export default function GameScreen({ navigation }: Props) {
     registerHit, 
     derivedLevel, 
     derivedProgress,
+    accuracyLabel,
+    perfectFlash,
+    perfectStreak,
+    incrementPerfectStreak,
+    resetPerfectStreak,
   } = useGameStore();
   
   const pulseAnim = useRef(new Animated.Value(0)).current;
@@ -36,6 +42,7 @@ export default function GameScreen({ navigation }: Props) {
   const splashAnim = useRef(new Animated.Value(0)).current;
   const bgFlashAnim = useRef(new Animated.Value(0)).current;
   const levelUpAnim = useRef(new Animated.Value(0)).current;
+  const perfectShockAnim = useRef(new Animated.Value(0)).current;
 
   // PARTICLES
   const particles = useRef([...Array(8)].map(() => ({
@@ -98,7 +105,9 @@ export default function GameScreen({ navigation }: Props) {
   };
 
   function triggerVisualFeedback(accuracy: Accuracy) {
-    let text = accuracy;
+    // Para PERFECT, deixamos o Label Service (Zustand) cuidar do texto dinâmico (com combo xN)
+    // Para as demais precisões, usamos o feedbackText local.
+    const text = accuracy === 'PERFECT' ? '' : accuracy;
     setFeedbackText(text);
 
     feedbackScale.setValue(0.5);
@@ -120,12 +129,22 @@ export default function GameScreen({ navigation }: Props) {
 
   function triggerGlow(accuracy: Accuracy) {
     if (accuracy !== 'PERFECT') return;
+    
     glowAnim.setValue(0);
-    Animated.timing(glowAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
+    perfectShockAnim.setValue(0);
+
+    Animated.parallel([
+      Animated.timing(glowAnim, {
+        toValue: 1,
+        duration: 450,
+        useNativeDriver: true,
+      }),
+      Animated.timing(perfectShockAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start();
   }
 
   function triggerParticles() {
@@ -172,6 +191,28 @@ export default function GameScreen({ navigation }: Props) {
     };
   }, []);
 
+  // Feedback de Level Up
+  useEffect(() => {
+    if (derivedLevel > 1) {
+      levelUpAnim.setValue(0);
+      Animated.sequence([
+        Animated.spring(levelUpAnim, {
+          toValue: 1,
+          friction: 4,
+          tension: 40,
+          useNativeDriver: true,
+        }),
+        Animated.timing(levelUpAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+        })
+      ]).start();
+
+      triggerHaptic('PERFECT'); // Usando um feedback forte para Level Up
+    }
+  }, [derivedLevel]);
+
   const handleTap = () => {
     const now = getCurrentTimeBuffer();
     const state = useGameStore.getState();
@@ -205,10 +246,15 @@ export default function GameScreen({ navigation }: Props) {
       useNativeDriver: true,
     }).start();
 
-    triggerHaptic(result.accuracy);
+    if (result.accuracy === "PERFECT") {
+      incrementPerfectStreak();
+      triggerPerfectFeedback();
+    } else {
+      resetPerfectStreak();
+      triggerHaptic(result.accuracy);
+    }
 
     if (result.accuracy === "PERFECT") {
-      bgFlashAnim.setValue(0);
       Animated.sequence([
         Animated.timing(bgFlashAnim, { toValue: 1, duration: 50, useNativeDriver: true }),
         Animated.timing(bgFlashAnim, { toValue: 0, duration: 200, useNativeDriver: true })
@@ -282,7 +328,25 @@ export default function GameScreen({ navigation }: Props) {
 
         <View style={styles.header} pointerEvents="none">
           <View style={styles.scoreData}>
-            <Text style={styles.scoreLabel}>SCORE - LV.{paddedLevel}</Text>
+            <Animated.Text 
+              style={[
+                styles.scoreLabel, 
+                { 
+                  transform: [{ 
+                    scale: levelUpAnim.interpolate({ 
+                      inputRange: [0, 1], 
+                      outputRange: [1, 1.4] 
+                    }) 
+                  }],
+                  color: levelUpAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ['#666', '#00FFAA']
+                  })
+                }
+              ]}
+            >
+              SCORE - LV.{paddedLevel}
+            </Animated.Text>
             <Text style={styles.scoreText}>{score}</Text>
             <View style={styles.progressBarBg}>
               <View style={[styles.progressBarFill, { width: derivedProgress * 120 }]}/>
@@ -291,9 +355,15 @@ export default function GameScreen({ navigation }: Props) {
         </View>
 
         {combo > 1 && (
-          <Animated.View style={[styles.comboContainer, { transform: [{ scale: comboAnim }] }]} pointerEvents="none">
-            <Text style={styles.comboText}>{combo}</Text>
-            <Text style={styles.comboLabel}>COMBO</Text>
+          <Animated.View 
+            style={[
+              styles.comboContainer, 
+              { transform: [{ scale: comboAnim }] }
+            ]} 
+            pointerEvents="none"
+          >
+            <Text style={[styles.comboText, perfectStreak >= 2 && styles.comboTextPerfect]}>{combo}</Text>
+            <Text style={[styles.comboLabel, perfectStreak >= 2 && styles.comboTextPerfect]}>COMBO</Text>
           </Animated.View>
         )}
 
@@ -324,6 +394,20 @@ export default function GameScreen({ navigation }: Props) {
                 backgroundColor: '#00FFAA',
                 opacity: glowAnim.interpolate({ inputRange: [0, 0.5, 1], outputRange: [0, 0.8, 0] }),
                 transform: [{ scale: glowAnim.interpolate({ inputRange: [0, 1], outputRange: [0.5, 2.5] }) }],
+              }}
+            />
+
+            {/* Onda de choque expansiva para PERFECT */}
+            <Animated.View
+              style={{
+                position: 'absolute',
+                width: 180,
+                height: 180,
+                borderRadius: 90,
+                borderWidth: 2,
+                borderColor: '#00FFAA',
+                opacity: perfectShockAnim.interpolate({ inputRange: [0, 1], outputRange: [0.6, 0] }),
+                transform: [{ scale: perfectShockAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 5] }) }],
               }}
             />
 
@@ -360,7 +444,7 @@ export default function GameScreen({ navigation }: Props) {
         </View>
 
         <FloatingFeedback 
-          text={feedbackText} 
+          text={accuracyLabel || feedbackText} 
           opacity={feedbackOpacity} 
           scale={feedbackScale}
           color={getColorByAccuracy(lastAccuracy)}
@@ -371,23 +455,72 @@ export default function GameScreen({ navigation }: Props) {
 }
 
 // Pequeno componente local para manter o JSX limpo e restaurar o FloatingFeedback
-const FloatingFeedback = ({ text, opacity, scale, color }: any) => (
-  <Animated.Text
-    style={{
-      position: 'absolute',
-      top: '35%',
-      color: color,
-      fontSize: 42,
-      fontWeight: 'bold',
-      opacity: opacity,
-      transform: [{ scale: scale }],
-      textAlign: 'center',
-      textTransform: 'uppercase',
-    }}
-  >
-    {text}
-  </Animated.Text>
-);
+const FloatingFeedback = ({ text, opacity, scale, color }: any) => {
+  const ultraStyle = useGameStore(s => s.ultraStyle);
+  const isUltra = text === 'ULTRA!';
+
+  let extraStyles: any = {};
+  if (isUltra) {
+    switch (ultraStyle) {
+      case 'ULTRA_BORDER_LIGHT':
+        extraStyles = { borderWidth: 1, borderColor: 'rgba(0, 255, 170, 0.3)', paddingHorizontal: 12, paddingVertical: 4, borderRadius: 10 };
+        break;
+      case 'ULTRA_BORDER_STRONG':
+        extraStyles = { borderWidth: 2, borderColor: 'rgba(0, 255, 170, 0.6)', paddingHorizontal: 16, paddingVertical: 6, borderRadius: 10 };
+        break;
+      case 'ULTRA_GRADIENT':
+        extraStyles = { borderWidth: 2, borderColor: '#00FFAA', paddingHorizontal: 20, paddingVertical: 8, borderRadius: 10, backgroundColor: 'rgba(0, 255, 170, 0.08)' };
+        break;
+      case 'ULTRA_MAX':
+        extraStyles = { 
+          borderWidth: 2, 
+          borderColor: '#00FFAA', 
+          paddingHorizontal: 24, 
+          paddingVertical: 10, 
+          borderRadius: 12, 
+          backgroundColor: 'rgba(0, 255, 170, 0.15)',
+          shadowColor: '#00FFAA',
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.5,
+          shadowRadius: 10,
+        };
+        break;
+    }
+  }
+
+  return (
+    <Animated.View
+      style={[
+        {
+          position: 'absolute',
+          top: '35%',
+          opacity: opacity,
+          transform: [{ scale: scale }],
+          alignItems: 'center',
+          justifyContent: 'center',
+        },
+        extraStyles
+      ]}
+    >
+      <Text
+        style={{
+          color: color,
+          fontSize: isUltra ? 52 : 42,
+          fontWeight: '900',
+          textAlign: 'center',
+          textTransform: 'uppercase',
+          textShadowColor: color,
+          textShadowRadius: isUltra ? 20 : 0,
+        }}
+      >
+        {text}
+      </Text>
+      {text === 'PERFECT' && (
+        <View style={{ height: 2, width: 60, backgroundColor: color, marginTop: 5 }} />
+      )}
+    </Animated.View>
+  );
+};
 
 const styles = StyleSheet.create({
   rootPressable: { flex: 1, backgroundColor: '#000' },
@@ -405,6 +538,7 @@ const styles = StyleSheet.create({
 
   comboContainer: { position: 'absolute', top: 60, right: 30, alignItems: 'flex-end' },
   comboText: { fontSize: 42, fontWeight: '900', color: '#60a5fa', fontStyle: 'italic', textShadowColor: 'rgba(96, 165, 250, 0.5)', textShadowRadius: 15 },
+  comboTextPerfect: { color: '#00FFAA', textShadowColor: 'rgba(0, 255, 170, 0.6)' },
   comboLabel: { fontSize: 10, fontWeight: '900', color: '#60a5fa', letterSpacing: 2, marginTop: -5 },
   
   gameArea: { width: 350, height: 350, justifyContent: 'center', alignItems: 'center' },

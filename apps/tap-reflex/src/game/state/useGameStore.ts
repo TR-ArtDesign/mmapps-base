@@ -22,9 +22,21 @@ interface GameStore {
   roundDuration: number;
   startTime: number; // Single source of truth for round beginning
 
+  perfectFlash: boolean;
+  accuracyLabel: string | null;
+  perfectStreak: number;
+  bestPerfectStreak: number;
+  ultraStyle: string;
+
   setTargetRound: (time: number, duration: number, startTime: number) => void;
   registerHit: (result: any) => void;
   resetGame: () => void;
+  setPerfectFlash: (value: boolean) => void;
+  setAccuracyLabel: (label: string) => void;
+  clearAccuracyLabel: () => void;
+  incrementPerfectStreak: () => void;
+  resetPerfectStreak: () => void;
+  setUltraStyle: (style: string) => void;
 }
 
 export const useGameStore = create<GameStore>()(
@@ -36,6 +48,11 @@ export const useGameStore = create<GameStore>()(
       highScore: 0,
       isNewRecord: false,
       lastAccuracy: null,
+      perfectFlash: false,
+      accuracyLabel: null,
+      perfectStreak: 0,
+      bestPerfectStreak: 0,
+      ultraStyle: 'ULTRA_BASE',
 
       derivedLevel: 1,
       derivedProgress: 0,
@@ -89,6 +106,10 @@ export const useGameStore = create<GameStore>()(
           bestCombo: 0,
           isNewRecord: false,
           lastAccuracy: null,
+          perfectFlash: false,
+          accuracyLabel: null,
+          perfectStreak: 0,
+          ultraStyle: 'ULTRA_BASE',
           derivedLevel: 1,
           derivedProgress: 0,
           difficultyFactor: 1,
@@ -97,13 +118,34 @@ export const useGameStore = create<GameStore>()(
           roundDuration: 1000,
           startTime: 0,
         }),
+      
+      setPerfectFlash: (value) => set({ perfectFlash: value }),
+      setAccuracyLabel: (label) => set({ accuracyLabel: label }),
+      clearAccuracyLabel: () => set({ accuracyLabel: null }),
+      
+      incrementPerfectStreak: () =>
+        set((state) => {
+          const newStreak = state.perfectStreak + 1;
+          return {
+            perfectStreak: newStreak,
+            bestPerfectStreak: Math.max(state.bestPerfectStreak, newStreak),
+          };
+        }),
+
+      resetPerfectStreak: () =>
+        set({
+          perfectStreak: 0,
+        }),
+
+      setUltraStyle: (style) => set({ ultraStyle: style }),
     }),
     {
       name: 'tap-reflex-storage',
       storage: createJSONStorage(() => AsyncStorage),
       partialize: (state) => ({ 
         highScore: state.highScore,
-        bestCombo: state.bestCombo // We might want to persist the best combo record too
+        bestCombo: state.bestCombo,
+        bestPerfectStreak: state.bestPerfectStreak
       }),
     }
   )

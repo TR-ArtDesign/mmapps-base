@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function ResultScreen({ navigation }: Props) {
-  const { score, bestCombo, highScore, isNewRecord, resetGame } = useGameStore();
+  const { score, bestCombo, highScore, isNewRecord, bestPerfectStreak, resetGame } = useGameStore();
 
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
@@ -53,11 +53,15 @@ export default function ResultScreen({ navigation }: Props) {
         <View style={styles.recordsWrapper}>
           <View style={styles.recordBox}>
             <Text style={styles.recordLabel}>BEST SCORE</Text>
-            <Text style={styles.recordValue}>{highScore.toLocaleString()}</Text>
+            <Text style={[styles.recordValue, { color: '#FFD166' }]}>{highScore.toLocaleString()}</Text>
           </View>
-          <View style={[styles.recordBox, { borderLeftWidth: 1, borderLeftColor: '#222' }]}>
-            <Text style={styles.recordLabel}>BEST STREAK</Text>
-            <Text style={styles.recordValue}>{bestCombo}</Text>
+          <View style={[styles.recordBox, { borderLeftWidth: 1, borderLeftColor: '#1a1a1a', borderRightWidth: 1, borderRightColor: '#1a1a1a' }]}>
+            <Text style={styles.recordLabel}>BEST COMBO</Text>
+            <Text style={[styles.recordValue, { color: '#FF8C42' }]}>{bestCombo}</Text>
+          </View>
+          <View style={styles.recordBox}>
+            <Text style={styles.recordLabel}>PERFECTS!</Text>
+            <Text style={[styles.recordValue, { color: '#00FFAA' }]}>{bestPerfectStreak}</Text>
           </View>
         </View>
       </Animated.View>
@@ -126,13 +130,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1,
     borderColor: '#1a1a1a',
+    marginHorizontal: 20,
     overflow: 'hidden',
   },
   recordBox: {
     paddingVertical: 15,
-    paddingHorizontal: 25,
+    paddingHorizontal: 10,
     alignItems: 'center',
-    minWidth: 140,
+    flex: 1,
   },
   recordLabel: {
     color: '#444',
