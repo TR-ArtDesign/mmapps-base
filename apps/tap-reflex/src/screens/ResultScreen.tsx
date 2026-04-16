@@ -3,6 +3,8 @@ import { View, Text, Pressable, StyleSheet, Animated } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useGameStore } from '@game/state/useGameStore';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { theme } from '../theme/theme';
+import { typography } from '../theme/typography';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Result'>;
@@ -53,15 +55,15 @@ export default function ResultScreen({ navigation }: Props) {
         <View style={styles.recordsWrapper}>
           <View style={styles.recordBox}>
             <Text style={styles.recordLabel}>BEST SCORE</Text>
-            <Text style={[styles.recordValue, { color: '#FFD166' }]}>{highScore.toLocaleString()}</Text>
+            <Text style={[styles.recordValue, { color: theme.colors.good }]}>{highScore.toLocaleString()}</Text>
           </View>
-          <View style={[styles.recordBox, { borderLeftWidth: 1, borderLeftColor: '#1a1a1a', borderRightWidth: 1, borderRightColor: '#1a1a1a' }]}>
+          <View style={[styles.recordBox, { borderLeftWidth: 1, borderLeftColor: theme.colors.surface, borderRightWidth: 1, borderRightColor: theme.colors.surface }]}>
             <Text style={styles.recordLabel}>BEST COMBO</Text>
-            <Text style={[styles.recordValue, { color: '#FF8C42' }]}>{bestCombo}</Text>
+            <Text style={[styles.recordValue, { color: theme.colors.almost }]}>{bestCombo}</Text>
           </View>
           <View style={styles.recordBox}>
             <Text style={styles.recordLabel}>PERFECTS!</Text>
-            <Text style={[styles.recordValue, { color: '#00FFAA' }]}>{bestPerfectStreak}</Text>
+            <Text style={[styles.recordValue, { color: theme.colors.perfect }]}>{bestPerfectStreak}</Text>
           </View>
         </View>
       </Animated.View>
@@ -78,15 +80,15 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: '#000',
+    backgroundColor: theme.colors.background,
   },
   gameOverText: {
-    fontSize: 64,
-    fontWeight: '900',
-    color: '#ff4d4d',
+    fontSize: typography.size.display + 20,
+    fontWeight: typography.weight.bold,
+    color: theme.colors.miss,
     fontStyle: 'italic',
     marginBottom: 40,
-    textShadowColor: 'rgba(255, 77, 77, 0.5)',
+    textShadowColor: 'rgba(255, 59, 48, 0.5)',
     textShadowRadius: 20,
     letterSpacing: 2,
   },
@@ -96,66 +98,66 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   newRecordBadge: {
-    backgroundColor: '#00FFAA',
-    paddingVertical: 4,
-    paddingHorizontal: 12,
-    borderRadius: 4,
+    backgroundColor: theme.colors.perfect,
+    paddingVertical: theme.spacing.xs,
+    paddingHorizontal: theme.spacing.md,
+    borderRadius: theme.borderRadius.sm,
     marginBottom: 20,
     transform: [{ rotate: '-3deg' }],
   },
   newRecordText: {
-    color: '#000',
-    fontWeight: '900',
-    fontSize: 12,
+    color: theme.colors.background,
+    fontWeight: typography.weight.bold,
+    fontSize: typography.size.xs,
     letterSpacing: 2,
   },
   scoreLabel: {
-    color: '#666',
-    fontSize: 14,
-    fontWeight: '900',
+    color: theme.colors.textSecondary,
+    fontSize: typography.size.sm,
+    fontWeight: typography.weight.bold,
     letterSpacing: 4,
     marginBottom: 10,
   },
   score: {
-    color: '#fff',
-    fontSize: 82,
-    fontWeight: '900',
+    color: theme.colors.textPrimary,
+    fontSize: typography.size.display * 2,
+    fontWeight: typography.weight.bold,
     marginBottom: 40,
     textShadowColor: 'rgba(255, 255, 255, 0.2)',
     textShadowRadius: 15,
   },
   recordsWrapper: {
     flexDirection: 'row',
-    backgroundColor: '#0a0a0a',
-    borderRadius: 20,
+    backgroundColor: theme.colors.background,
+    borderRadius: theme.borderRadius.lg,
     borderWidth: 1,
-    borderColor: '#1a1a1a',
+    borderColor: theme.colors.surface,
     marginHorizontal: 20,
     overflow: 'hidden',
   },
   recordBox: {
-    paddingVertical: 15,
-    paddingHorizontal: 10,
+    paddingVertical: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.sm,
     alignItems: 'center',
     flex: 1,
   },
   recordLabel: {
-    color: '#444',
-    fontSize: 10,
-    fontWeight: '900',
+    color: theme.colors.textSecondary,
+    fontSize: typography.size.xs - 2,
+    fontWeight: typography.weight.bold,
     letterSpacing: 2,
     marginBottom: 5,
   },
   recordValue: {
-    color: '#00FFAA',
-    fontSize: 24,
-    fontWeight: '900',
+    color: theme.colors.perfect,
+    fontSize: typography.size.lg,
+    fontWeight: typography.weight.bold,
     fontStyle: 'italic',
   },
   tapToRestart: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '900',
+    color: theme.colors.textPrimary,
+    fontSize: typography.size.sm + 2,
+    fontWeight: typography.weight.bold,
     letterSpacing: 3,
     position: 'absolute',
     bottom: 20,

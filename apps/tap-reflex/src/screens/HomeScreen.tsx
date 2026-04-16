@@ -3,6 +3,9 @@ import { View, Text, Pressable, StyleSheet, Animated } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useGameStore } from '@game/state/useGameStore';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { theme } from '../theme/theme';
+import { typography } from '../theme/typography';
+import { Background } from '../components/Background';
 
 type Props = {
   navigation: NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -48,6 +51,7 @@ export default function HomeScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
+      <Background variant="home" />
       {/* Elemento de fundo pulsante */}
       <Animated.View 
         style={[
@@ -81,7 +85,6 @@ export default function HomeScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -90,37 +93,37 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     borderRadius: 150,
-    backgroundColor: '#00FFAA',
+    backgroundColor: theme.colors.perfect,
   },
   content: {
     alignItems: 'center',
   },
   titleMain: {
-    fontSize: 82,
-    fontWeight: '900',
-    color: '#fff',
+    fontSize: typography.size.display * 2,
+    fontWeight: typography.weight.bold,
+    color: theme.colors.textPrimary,
     letterSpacing: 10,
     lineHeight: 82,
   },
   titleSub: {
-    fontSize: 52,
-    fontWeight: '900',
-    color: '#00FFAA',
+    fontSize: typography.size.display + 10,
+    fontWeight: typography.weight.bold,
+    color: theme.colors.perfect,
     letterSpacing: 4,
     lineHeight: 52,
-    textShadowColor: 'rgba(0, 255, 170, 0.5)',
+    textShadowColor: 'rgba(0, 255, 136, 0.5)',
     textShadowRadius: 20,
   },
   separator: {
     width: 40,
     height: 4,
-    backgroundColor: '#333',
-    marginVertical: 20,
+    backgroundColor: theme.colors.surfaceLight,
+    marginVertical: theme.spacing.xl,
   },
   tagline: {
-    color: '#666',
-    fontSize: 12,
-    fontWeight: '900',
+    color: theme.colors.textSecondary,
+    fontSize: typography.size.xs,
+    fontWeight: typography.weight.bold,
     letterSpacing: 5,
   },
   footer: {
@@ -131,26 +134,26 @@ const styles = StyleSheet.create({
   },
   startButton: {
     backgroundColor: 'rgba(255,255,255,0.05)',
-    paddingVertical: 18,
-    paddingHorizontal: 40,
+    paddingVertical: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.xl + 16,
     borderRadius: 50,
     borderWidth: 2,
-    borderColor: '#00FFAA',
-    shadowColor: '#00FFAA',
+    borderColor: theme.colors.perfect,
+    shadowColor: theme.colors.perfect,
     shadowRadius: 15,
     shadowOpacity: 0.3,
   },
   startText: {
-    color: '#00FFAA',
-    fontSize: 14,
-    fontWeight: '900',
+    color: theme.colors.perfect,
+    fontSize: typography.size.sm,
+    fontWeight: typography.weight.bold,
     letterSpacing: 3,
   },
   bestScore: {
-    marginTop: 20,
-    color: '#444',
-    fontSize: 11,
-    fontWeight: '900',
+    marginTop: theme.spacing.xl,
+    color: theme.colors.textSecondary,
+    fontSize: typography.size.xs - 1,
+    fontWeight: typography.weight.bold,
     letterSpacing: 2,
   }
 });
