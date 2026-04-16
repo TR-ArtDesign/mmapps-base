@@ -14,9 +14,11 @@ interface GameStore {
   difficultyFactor: number;
 
   targetTime: number;
-  roundDuration: number; // Added to track current round length
+  lastTargetTime: number;
+  roundDuration: number;
+  startTime: number; // Single source of truth for round beginning
 
-  setTargetRound: (time: number, duration: number) => void;
+  setTargetRound: (time: number, duration: number, startTime: number) => void;
   registerHit: (result: any) => void;
   resetGame: () => void;
 }
@@ -33,13 +35,17 @@ export const useGameStore = create<GameStore>((set) => ({
   difficultyFactor: 1,
 
   targetTime: 0,
+  lastTargetTime: 0,
   roundDuration: 1000,
+  startTime: 0,
 
-  setTargetRound: (time, duration) =>
-    set({
+  setTargetRound: (time, duration, startTime) =>
+    set((state) => ({
+      lastTargetTime: state.targetTime,
       targetTime: time,
       roundDuration: duration,
-    }),
+      startTime: startTime,
+    })),
 
   registerHit: (result) =>
     set((state) => {
@@ -77,6 +83,8 @@ export const useGameStore = create<GameStore>((set) => ({
       derivedProgress: 0,
       difficultyFactor: 1,
       targetTime: 0,
+      lastTargetTime: 0,
       roundDuration: 1000,
+      startTime: 0,
     }),
 }));

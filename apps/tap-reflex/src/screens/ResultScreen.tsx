@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, Pressable, StyleSheet } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { View, Text, Pressable, StyleSheet, Animated } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useGameStore } from '@game/state/useGameStore';
 import { RootStackParamList } from '../navigation/AppNavigator';
@@ -11,6 +11,24 @@ type Props = {
 export default function ResultScreen({ navigation }: Props) {
   const { score, bestCombo, resetGame } = useGameStore();
 
+  const scaleAnim = useRef(new Animated.Value(0)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.spring(scaleAnim, { toValue: 1, friction: 6, tension: 40, useNativeDriver: true }),
+      Animated.timing(opacityAnim, { toValue: 1, duration: 400, useNativeDriver: true })
+    ]).start();
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(pulseAnim, { toValue: 1.1, duration: 800, useNativeDriver: true }),
+        Animated.timing(pulseAnim, { toValue: 1, duration: 800, useNativeDriver: true }),
+      ])
+    ).start();
+  }, []);
+
   const handleRestart = () => {
     resetGame();
     navigation.replace("Game");
@@ -18,17 +36,23 @@ export default function ResultScreen({ navigation }: Props) {
 
   return (
     <Pressable style={styles.container} onPress={handleRestart}>
-      <Text style={styles.missText}>MISS</Text>
+      <Animated.Text style={[styles.missText, { opacity: opacityAnim, transform: [{ scale: scaleAnim }] }]}>
+        GAME OVER
+      </Animated.Text>
       
-      <View style={styles.statsContainer}>
-        <Text style={styles.scoreLabel}>SCORE</Text>
-        <Text style={styles.score}>{score}</Text>
+      <Animated.View style={[styles.statsContainer, { opacity: opacityAnim, transform: [{ translateY: opacityAnim.interpolate({ inputRange: [0, 1], outputRange: [20, 0] }) }] }]}>
+        <Text style={styles.scoreLabel}>FINAL SCORE</Text>
+        <Text style={styles.score}>{score.toLocaleString()}</Text>
         
-        <Text style={styles.bestLabel}>BEST COMBO</Text>
-        <Text style={styles.best}>{bestCombo}</Text>
-      </View>
+        <View style={styles.bestContainer}>
+          <Text style={styles.bestLabel}>BEST STREAK</Text>
+          <Text style={styles.best}>{bestCombo}</Text>
+        </View>
+      </Animated.View>
 
-      <Text style={styles.tapToRestart}>TAP ANYWHERE TO RESTART</Text>
+      <Animated.Text style={[styles.tapToRestart, { transform: [{ scale: pulseAnim }] }]}>
+        TAP ANYWHERE TO REPLAY
+      </Animated.Text>
     </Pressable>
   );
 }
@@ -38,44 +62,66 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: '#000', // matches GameScreen
+    backgroundColor: '#000',
   },
   missText: {
-    fontSize: 50,
-    fontWeight: 'bold',
-    color: '#f87171',
+    fontSize: 64,
+    fontWeight: '900',
+    color: '#ff4d4d',
+    fontStyle: 'italic',
     marginBottom: 40,
+    textShadowColor: 'rgba(255, 77, 77, 0.5)',
+    textShadowRadius: 20,
+    letterSpacing: 2,
   },
   statsContainer: {
     alignItems: 'center',
     marginBottom: 60,
   },
   scoreLabel: {
-    color: '#888',
-    fontSize: 16,
-    fontWeight: 'bold',
+    color: '#666',
+    fontSize: 14,
+    fontWeight: '900',
+    letterSpacing: 4,
+    marginBottom: 10,
   },
   score: {
     color: '#fff',
-    fontSize: 48,
-    fontWeight: 'bold',
-    marginBottom: 20,
+    fontSize: 82,
+    fontWeight: '900',
+    marginBottom: 30,
+    textShadowColor: 'rgba(255, 255, 255, 0.2)',
+    textShadowRadius: 15,
+  },
+  bestContainer: {
+    backgroundColor: '#111',
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 50,
+    borderWidth: 1,
+    borderColor: '#333',
+    alignItems: 'center',
   },
   bestLabel: {
-    color: '#888',
-    fontSize: 16,
-    fontWeight: 'bold',
+    color: '#60a5fa',
+    fontSize: 11,
+    fontWeight: '900',
+    letterSpacing: 2,
+    marginBottom: 2,
   },
   best: {
-    color: '#fff',
-    fontSize: 24,
-    fontWeight: 'bold',
+    color: '#60a5fa',
+    fontSize: 28,
+    fontWeight: '900',
+    fontStyle: 'italic',
   },
   tapToRestart: {
     color: '#fff',
-    fontSize: 18,
-    opacity: 0.7,
+    fontSize: 16,
+    fontWeight: '900',
+    letterSpacing: 3,
     position: 'absolute',
-    bottom: 50,
+    bottom: 120,
+    opacity: 0.8,
   }
 });
