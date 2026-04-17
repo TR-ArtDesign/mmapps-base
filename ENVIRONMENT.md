@@ -10,6 +10,11 @@ Para configurar ou atualizar todas as ferramentas necessárias (Java, ADB, Bun),
 ./scripts/setup-environment.ps1
 ```
 
+### 🔧 Reparar Binários Corrompidos (Git/Windows)
+Se o app falhar ao compilar Android devido a arquivos `.jar` ou `.keystore` corrompidos após um `git pull`:
+```powershell
+./scripts/setup-environment.ps1 repair "apps/aktion-tap"
+```
 ---
 
 ## 📦 Gerenciador de Pacotes (Scoop)
@@ -23,11 +28,11 @@ Utilizamos o **Scoop** para gerenciar dependências de sistema sem precisar de p
 
 ---
 
-## 📱 Emulador (MuMu Player)
+## 📱 Emuladores (MuMu Player ou ReDroid)
 
-Para testar os apps no MuMu Player, você precisa garantir que o ADB esteja conectado:
+Para testar os apps, você pode utilizar o **MuMu Player** ou o **ReDroid** (que estiver rodando na sua máquina atual). Garanta que o ADB esteja conectado ao respectivo emulador.
 
-### Conectar ao MuMu:
+### Conectar ao MuMu Player:
 1. Abra o MuMu Player.
 2. No PowerShell, execute:
    ```powershell
@@ -35,10 +40,18 @@ Para testar os apps no MuMu Player, você precisa garantir que o ADB esteja cone
    ```
    *(Nota: Se usar o MuMu 12, verifique a porta nas configurações de desenvolvedor do emulador).*
 
-3. Verifique a conexão:
+### Conectar ao ReDroid (Atual):
+1. Verifique se a instância do ReDroid (ex.: `redroid12_x86_64_only`) está rodando/espelhada via `scrcpy`.
+2. No PowerShell, conecte via IP:
    ```powershell
-   adb devices
+   adb connect 10.10.0.52:5555
    ```
+
+### Verificação Comum:
+Independente de qual emulador estiver usando, você pode verificar a conexão com:
+```powershell
+adb devices
+```
 
 ---
 

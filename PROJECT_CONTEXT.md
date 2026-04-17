@@ -8,7 +8,7 @@ Este arquivo contém as diretrizes mestras para o desenvolvimento do ecossistema
 
 **Regra de Ouro:** Se um comando falhar por falta de dependências de sistema (Java, Android SDK, Bun, etc.), o agente tem permissão para:
 
-1. Executar o script `./scripts/setup-environment.ps1` automaticamente.
+1. Executar o script `./scripts/setup-environment.ps1` automaticamente (use o argumento `repair "caminho/do/app"` se o erro for no Gradle ou Keystore).
 2. Retentar a tarefa original após o setup.
 
 ---
@@ -21,11 +21,14 @@ Este arquivo contém as diretrizes mestras para o desenvolvimento do ecossistema
 
 ---
 
-## 🧪 Fluxo de Testes (MuMu Player)
+## 🧪 Fluxo de Testes (Emuladores)
 
-O emulador padrão utilizado é o **MuMu Player**.
+Os emuladores padrão utilizados podem ser o **MuMu Player** ou o **ReDroid**, dependendo da máquina (workspace) atual.
 
-* Sempre tente conectar via ADB na porta `7555` (ou as portas de incremento do MuMu 12 se necessário) antes de reportar falha de conexão com dispositivo.
+* **MuMu Player**: Sempre tente conectar via ADB na porta `127.0.0.1:7555` (ou nas portas de incremento do MuMu 12 se necessário).
+* **ReDroid**: Tente conectar via ADB no IP remoto apropriado (ex: `10.10.0.52:5555`).
+
+Sempre verifique com `adb devices` para garantir que o respectivo emulador está conectado antes de reportar falha de conexão.
 
 ---
 

@@ -61,8 +61,8 @@ export default function HomeScreen({ navigation }: Props) {
       />
 
       <Animated.View style={[styles.content, { opacity: titleAnim, transform: [{ translateY: titleAnim.interpolate({ inputRange: [0, 1], outputRange: [50, 0] }) }] }]}>
-        <Text style={styles.titleMain}>TAP</Text>
-        <Text style={styles.titleSub}>REFLEX</Text>
+        <Text style={styles.titleMain}>AKTION</Text>
+        <Text style={styles.titleSub}>TAP</Text>
         
         <View style={styles.separator} />
         
@@ -99,11 +99,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   titleMain: {
-    fontSize: typography.size.display * 2,
+    fontSize: 64,
     fontWeight: typography.weight.bold,
     color: theme.colors.textPrimary,
-    letterSpacing: 10,
-    lineHeight: 82,
+    letterSpacing: 4,
+    lineHeight: 70,
   },
   titleSub: {
     fontSize: typography.size.display + 10,
